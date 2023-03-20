@@ -1,10 +1,15 @@
 import { useQuery, useMutation, useQueryClient } from "react-query";
 //import axios from "axios";
-import { getNotes, createNote } from "./request";
+import { getNotes, createNote, updateNote } from "./request";
 
 const App = () => {
   const queryClient = useQueryClient();
   const newNoteMutation = useMutation(createNote, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("notes");
+    },
+  });
+  const updateNoteMutation = useMutation(updateNote, {
     onSuccess: () => {
       queryClient.invalidateQueries("notes");
     },
@@ -25,7 +30,7 @@ const App = () => {
   const notes = result.data;
 
   const toggleImportance = (note) => {
-    console.log("toggle importance of", note.id);
+    updateNoteMutation.mutate({ ...note, important: !note.important });
   };
 
   return (
