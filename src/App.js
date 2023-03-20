@@ -1,13 +1,19 @@
-import { useQuery } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 //import axios from "axios";
-import { getNotes } from "./request";
+import { getNotes, createNote } from "./request";
 
 const App = () => {
+  const queryClient = useQueryClient();
+  const newNoteMutation = useMutation(createNote, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("notes");
+    },
+  });
   const addNote = async (event) => {
     event.preventDefault();
     const content = event.target.note.value;
     event.target.note.value = "";
-    console.log(content);
+    newNoteMutation.mutate({ content, important: true });
   };
 
   const result = useQuery("notes", getNotes);
