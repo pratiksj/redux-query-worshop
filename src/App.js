@@ -41,6 +41,7 @@ const App = () => {
   };
 
   const result = useQuery("notes", getNotes);
+  console.log(result, "pigeon");
 
   if (result.isLoading) {
     return <h1>Loading Data....</h1>;
